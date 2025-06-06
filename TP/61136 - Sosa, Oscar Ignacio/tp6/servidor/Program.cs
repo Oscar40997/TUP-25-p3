@@ -10,6 +10,8 @@ builder.Services.AddCors(options => {
 });
 
 // Agregar controladores si es necesario
+
+// Cambie esta linea
 builder.Services.AddControllers();
 
 var app = builder.Build();

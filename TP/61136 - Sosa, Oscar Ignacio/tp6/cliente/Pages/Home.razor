@@ -13,10 +13,7 @@
     
     <div class="row mb-4">
         <div class="col-12">
-            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor" disabled="@cargando">
-             @(cargando ? "Cargando..." : "Obtener datos del servidor")
-            </button>
-
+            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor">Obtener datos del servidor</button>
         </div>
     </div>
 
@@ -30,10 +27,7 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">@datos.Mensaje</h5>
-                        <p class="card-text">
-                            Fecha: @(datos.Fecha != null ? datos.Fecha.ToString("dd/MM/yyyy HH:mm:ss") : "Fecha no disponible")
-                        </p>
-
+                        <p class="card-text">Fecha: @datos.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
                     </div>
                 </div>
             } else if (error != null) {

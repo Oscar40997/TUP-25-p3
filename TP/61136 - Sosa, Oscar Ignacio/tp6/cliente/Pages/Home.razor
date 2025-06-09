@@ -52,3 +52,23 @@
         </div>
     </div>
 </div>
+
+@code {
+    private DatosRespuesta datosRespuesta;
+    private string mensajeError;
+    private bool estaCargando = false;
+
+    private async Task ObtenerDatosDelServidor()
+    {
+        try
+        {
+            estaCargando = true:
+            mensajeError = null;
+            datosRespuesta = await ApiService.ObtenerDatosAsync();
+        }
+        catch (HttpRequestException httpEx)
+        {
+            
+        }
+    }
+}

@@ -13,7 +13,10 @@
     
     <div class="row mb-4">
         <div class="col-12">
-            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor">Obtener datos del servidor</button>
+            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor" disabled="@cargando">
+             @(cargando ? "Cargando..." : "Obtener datos del servidor")
+            </button>
+
         </div>
     </div>
 

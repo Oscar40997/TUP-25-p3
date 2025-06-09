@@ -13,15 +13,22 @@
     
     <div class="row mb-4">
         <div class="col-12">
-            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor">Obtener datos del servidor</button>
+            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor"disabled="@estaCargando">
+                @(estaCargando ? "Cargando..." : "Obtener datos del servidor")
+            </button>
+
         </div>
     </div>
 
     <div class="row">
-        <div class="col-12">            
-            @if (cargando) {
+        <div class="col-12">
+
+            @if (estaCargando)
+            {
                 <div class="alert alert-info">Cargando datos...</div>
-            } else if (datos != null) {                <div class="card" style="width: 300px;">
+            }
+            
+            else if (datos != null) {                <div class="card" style="width: 300px;">
                     <div class="card-header">
                         Respuesta del servidor
                     </div>

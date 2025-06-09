@@ -27,24 +27,33 @@
             {
                 <div class="alert alert-info">Cargando datos...</div>
             }
-            
-            else if (datos != null) {                <div class="card" style="width: 300px;">
+
+            @if (datosRespuesta != null)
+            {
+                <div class="card" style="width: 300px;">
                     <div class="card-header">
                         Respuesta del servidor
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">@datos.Mensaje</h5>
-                        <p class="card-text">Fecha: @datos.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                        <h5 class="card-title">@datosRespuesta.Mensaje</h5>
+                        <p class="card-text">
+                            Fecha: @(datosRespuesta.Fecha != null ? datosRespuesta.Fecha.ToString("dd/MM/yyyy HH:mm:ss") : "Fecha no disponible")
+                        </p>
                     </div>
                 </div>
-            } else if (error != null) {
+            }
+
+            @if (mensajeError != null)
+            {
                 <div class="alert alert-danger">
-                    Error: @error
+                    Error: @mensajeError
                 </div>
             }
+
         </div>
     </div>
 </div>
+
 
 @code {
     private DatosRespuesta datos;

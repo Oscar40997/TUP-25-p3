@@ -53,7 +53,8 @@
     </div>
 </div>
 
-@code {
+@code 
+{
     private DatosRespuesta datosRespuesta;
     private string mensajeError;
     private bool estaCargando = false;
@@ -68,7 +69,17 @@
         }
         catch (HttpRequestException httpEx)
         {
-            
+            mensajeError = $"Error de red: {httpEx.Message}";
+            datosRespuesta = null;
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error inesperado: {ex.Message}";
+            datosRespuesta = null;
+        }
+        finally
+        {
+            estaCargando = false;
         }
     }
 }

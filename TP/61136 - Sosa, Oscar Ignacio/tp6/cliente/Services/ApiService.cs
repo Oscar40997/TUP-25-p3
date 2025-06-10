@@ -20,7 +20,31 @@ public class ApiService
 
     public async Task<DatosRespuesta> ObtenerDatosAsync()
     {
-        
+        try
+        {
+            var response = await _httpClient.GetAsync(_endpoint);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Respuesta no exitosa del servidor: {StatusCode}", response.StatusCode);
+                return new DatosRespuesta("Error del servidor: " + response.StatusCode, DateTime.Now);
+            }
+
+            var datos = await response.Content.ReadFormJsonAsync<DatosRespuesta>();
+
+            if (datos is null)
+            {
+                _logger.LogWarning("La respuesta del servidor fue vacía.");
+                return new DatosRespuesta("Respuesta vacia del servidor", DateTime.Now);
+            }
+
+            return datos;
+        }
+
+        catch (HttpRequestException ex)
+        {
+            
+        }
     }
 
 

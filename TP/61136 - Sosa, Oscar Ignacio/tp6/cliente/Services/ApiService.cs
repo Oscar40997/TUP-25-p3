@@ -56,9 +56,15 @@ public class ApiService
 
         catch (System.Text.Json.JsonException ex)
         {
-            
+            _logger.LogError(ex, "Error al deserializar la respuesta JSON.");
+            return new DatosRespuesta("Error de datos:" + ex.Message, DateTime.Now);
+        }
+
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error inesperado al obtener datos.");
+            return new DatosRespuesta("Error inesperado: " + ex.Message, DateTime.Now);
         }
     }
-
 
 }

@@ -43,6 +43,19 @@ public class ApiService
 
         catch (HttpRequestException ex)
         {
+            _logger.LogError(ex, "Error de red al contactar con el servidor.");
+            return new DatosRespuesta("Error de red: " + ex.Message, DateTime.Now);
+        }
+
+        catch (NotSupportedException ex)
+        {
+            _logger.LogError(ex, "Tipo de contenido no soportado.");
+            return new DatosRespuesta("Contenido no soportado: " + ex.Message, DateTime.Now);
+
+        }
+
+        catch (System.Text.Json.JsonException ex)
+        {
             
         }
     }

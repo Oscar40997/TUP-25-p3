@@ -52,5 +52,21 @@ public class ApiService
             _logger.LogError(ex, "Tipo de contenido no soportado.");
             return Error("Contenido no soportado: " + ex.Message);
         }
+
+        catch (System.Text.Json.JsonException ex)
+        {
+            _logger.LogError(ex, "Error al deserializar la respuesta JSON.");
+            return Error("Error de datos: " + ex.Message);
+        }
+
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error inesperado al obtener datos.");
+            return Error("Error inesperado: " + ex.Message);
+        }
     }
+
+    private DatosRespuesta Error(string mensaje)
+        => new DatosRespuesta(mensaje, DateTime.Now);
+    
 }

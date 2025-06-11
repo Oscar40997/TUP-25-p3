@@ -10,6 +10,11 @@ public class ApiService
     private readonly HttpClient _httpClient;
     private readonly ILogger<ApiService> _logger;
     private readonly string _endpoint;
-    
-    public ApiService(HttpClient)
+
+    public ApiService(HttpClient httpClient, ILogger<ApiService> logger, IConfiguration configuration)
+    {
+        _httpClient = httpClient;
+        _logger = logger;
+        _endpoint = configuration["ApiEndpoint"] ?? "api/datos";
+    }
 }

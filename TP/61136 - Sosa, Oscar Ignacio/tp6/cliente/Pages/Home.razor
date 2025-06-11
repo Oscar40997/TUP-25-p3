@@ -1,36 +1,35 @@
 ﻿@page "/"
-@using Cliente.Service
+@using cliente.Services
 @inject ApiService ApiService
 
-<PageTitle>Inincio</PageTitle>
+<PageTitle>Inicio</PageTitle>
 
 <div class="container">
     <div class="row mb-4">
         <div class="col-12">
-            <h1>Comunicacion cliente-Servidor</h1>
+            <h1>Comunicación Cliente-Servidor</h1>
         </div>
     </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-12">
-        <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor" disabled="@estaCargando">
-            @(estaCargando ? "Cargando..." : "Obtener datos del servidor")
-        </button>
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor" disabled="@estaCargando">
+                @(estaCargando ? "Cargando..." : "Obtener datos del servidor")
+            </button>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-12">
+    <div class="row">
+        <div class="col-12">
 
-        @if (estaCargando)
-        {
-            <div class="alert alert-info">Cargando datos...</div>>
-        }
+            @if (estaCargando)
+            {
+                <div class="alert alert-info">Cargando datos...</div>
+            }
 
-        @if (datosRespuesta != null)
-        {
-             <div class="card" style="width: 300px;">
+            @if (datosRespuesta != null)
+            {
+                <div class="card" style="width: 300px;">
                     <div class="card-header">
                         Respuesta del servidor
                     </div>
@@ -41,6 +40,56 @@
                         </p>
                     </div>
                 </div>
-        }
+            }
+
+            @if (mensajeError != null)
+            {
+                <div class="alert alert-danger">
+                    Error: @mensajeError
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <!-- Aquí insertamos el componente Productos -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <Productos />
+        </div>
     </div>
 </div>
+
+@code
+{
+    private DatosRespuesta datosRespuesta;
+    private string mensajeError;
+    private bool estaCargando = false;
+
+    private async Task ObtenerDatosDelServidor()
+    {
+        try
+       {
+            estaCargando = true;
+            mensajeError = null;
+            datosRespuesta = await ApiService.ObtenerDatosAsync();
+       }
+
+       catch(HttpRequestException httpEx)
+        {
+            mensajeError = $"Error de red: {httpEx.Message}";
+            datosRespuesta = null;
+        }
+
+         catch (Exception ex)
+        {
+            mensajeError = $"Error inesperado: {ex.Message}";
+            datosRespuesta = null;
+        }
+        finally
+        {
+            estaCargando = false;
+        }
+    }   
+
+}

@@ -46,5 +46,11 @@ public class ApiService
             _logger.LogError(ex, "Error de red al contactar con el servidor");
             return Error("Error de red: " + ex.Message);
         }
+
+        catch (NotSupportedException ex)
+        {
+            _logger.LogError(ex, "Tipo de contenido no soportado.");
+            return Error("Contenido no soportado: " + ex.Message);
+        }
     }
 }

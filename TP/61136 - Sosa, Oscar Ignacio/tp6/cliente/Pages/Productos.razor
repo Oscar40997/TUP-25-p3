@@ -1,0 +1,38 @@
+@using cliente.Services
+@inject ApiService ApiService
+
+<h2>Catálogo de Productos</h2>
+@if (productos == null)
+{
+    <p><em>Cargando productos...</em></p>
+}
+else if (!productos.Any())
+{
+    <p>No hay productos para mostrar.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var producto in productos)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@producto.ImagenUrl" class="card-img-top" alt="@producto.Nombre" />
+                    <div class="card-body">
+                        <h5 class="card-title">@producto.Nombre</h5>
+                        <p class="card-text">Precio: @producto.Precio.ToString("C")</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Producto> productos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await ApiService.ObtenerProductosAsync();
+    }
+}

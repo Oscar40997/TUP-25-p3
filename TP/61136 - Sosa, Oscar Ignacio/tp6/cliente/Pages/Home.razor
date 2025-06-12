@@ -10,7 +10,13 @@
             <h1>Comunicación Cliente-Servidor</h1>
         </div>
     </div>
-    
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <a class="btn btn-success" href="/productos">Ver Catálogo de Productos</a>
+        </div>
+    </div>
+
     <div class="row mb-4">
         <div class="col-12">
             <button class="btn btn-primary" @onclick="ObtenerDatosDelServidor" disabled="@estaCargando">
@@ -30,38 +36,24 @@
             @if (datosRespuesta != null)
             {
                 <div class="card" style="width: 300px;">
-                    <div class="card-header">
-                        Respuesta del servidor
-                    </div>
+                    <div class="card-header">Respuesta del servidor</div>
                     <div class="card-body">
                         <h5 class="card-title">@datosRespuesta.Mensaje</h5>
-                        <p class="card-text">
-                            Fecha: @(datosRespuesta.Fecha != null ? datosRespuesta.Fecha.ToString("dd/MM/yyyy HH:mm:ss") : "Fecha no disponible")
-                        </p>
+                        <p class="card-text">Fecha: @datosRespuesta.Fecha?.ToString("dd/MM/yyyy HH:mm:ss")</p>
                     </div>
                 </div>
             }
 
             @if (mensajeError != null)
             {
-                <div class="alert alert-danger">
-                    Error: @mensajeError
-                </div>
+                <div class="alert alert-danger">Error: @mensajeError</div>
             }
 
         </div>
     </div>
-
-    <!-- Aquí insertamos el componente Productos -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <Productos />
-        </div>
-    </div>
 </div>
 
-@code
-{
+@code {
     private DatosRespuesta datosRespuesta;
     private string mensajeError;
     private bool estaCargando = false;
@@ -69,19 +61,12 @@
     private async Task ObtenerDatosDelServidor()
     {
         try
-       {
+        {
             estaCargando = true;
             mensajeError = null;
             datosRespuesta = await ApiService.ObtenerDatosAsync();
-       }
-
-       catch(HttpRequestException httpEx)
-        {
-            mensajeError = $"Error de red: {httpEx.Message}";
-            datosRespuesta = null;
         }
-
-         catch (Exception ex)
+        catch (Exception ex)
         {
             mensajeError = $"Error inesperado: {ex.Message}";
             datosRespuesta = null;
@@ -90,6 +75,5 @@
         {
             estaCargando = false;
         }
-    }   
-
+    }
 }

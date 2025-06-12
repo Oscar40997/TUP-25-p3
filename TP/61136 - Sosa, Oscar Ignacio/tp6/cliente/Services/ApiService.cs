@@ -2,63 +2,46 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using cliente.Models; // ✅ Importación del modelo Producto
 
-namespace Cliente.Services;
+namespace cliente.Services;
 
 public class ApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<ApiService> _logger;
-    private readonly string _endpoint;
+    private readonly string _endpointDatos;
+    private readonly string _endpointProductos;
 
     public ApiService(HttpClient httpClient, ILogger<ApiService> logger, IConfiguration configuration)
     {
         _httpClient = httpClient;
         _logger = logger;
-        _endpoint = configuration["ApiEndpoint"] ?? "api/datos";
+        _endpointDatos = configuration["ApiEndpointDatos"] ?? "api/datos";
+        _endpointProductos = configuration["ApiEndpointProductos"] ?? "api/productos";
     }
 
+    // ✅ Método para obtener mensaje/fecha del servidor
     public async Task<DatosRespuesta> ObtenerDatosAsync()
     {
         try
         {
-            var repose = await _httpClient.GetAsync(_endpoint);
-
+            var response = await _httpClient.GetAsync(_endpointDatos);
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogWarning("Respuesta no exitosa del servidor; {StatusCode} ", response.StatusCode);
+                _logger.LogWarning("Respuesta no exitosa del servidor: {StatusCode}", response.StatusCode);
                 return Error($"Error del servidor: {response.StatusCode}");
             }
 
             var datos = await response.Content.ReadFromJsonAsync<DatosRespuesta>();
-
-            if (datos is null)
+            if (datos == null)
             {
-                _logger.LogWarning("La respuesta del servidor fue vacia.");
-                return Error("Respuesta vacia del servidor");
+                _logger.LogWarning("La respuesta del servidor fue vacía.");
+                return Error("Respuesta vacía del servidor");
             }
 
             return datos;
         }
-
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError(ex, "Error de red al contactar con el servidor");
-            return Error("Error de red: " + ex.Message);
-        }
-
-        catch (NotSupportedException ex)
-        {
-            _logger.LogError(ex, "Tipo de contenido no soportado.");
-            return Error("Contenido no soportado: " + ex.Message);
-        }
-
-        catch (System.Text.Json.JsonException ex)
-        {
-            _logger.LogError(ex, "Error al deserializar la respuesta JSON.");
-            return Error("Error de datos: " + ex.Message);
-        }
-
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error inesperado al obtener datos.");
@@ -66,7 +49,29 @@ public class ApiService
         }
     }
 
+    // ✅ Método para obtener productos del servidor
+    public async Task<List<Producto>> ObtenerProductosAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync(_endpointProductos);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Error al obtener productos: {StatusCode}", response.StatusCode);
+                return new List<Producto>();
+            }
+
+            var productos = await response.Content.ReadFromJsonAsync<List<Producto>>();
+            return productos ?? new List<Producto>();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener productos.");
+            return new List<Producto>();
+        }
+    }
+
+    // ✅ Método auxiliar para errores
     private DatosRespuesta Error(string mensaje)
         => new DatosRespuesta(mensaje, DateTime.Now);
-    
 }

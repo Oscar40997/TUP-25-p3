@@ -4,13 +4,19 @@ using cliente;
 using cliente.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+// 🔷 Puntos de entrada del componente Blazor
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configurar el HttpClient para apuntar al servidor API
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5184") });
+// 🔷 HttpClient configurado para apuntar a la API
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri("http://localhost:5184") // Asegúrate de que este sea el puerto de tu servidor API
+});
 
-// Registrar el servicio API
+// 🔷 Inyección del servicio que conecta con la API
 builder.Services.AddScoped<ApiService>();
 
+// 🔷 Ejecutar la app
 await builder.Build().RunAsync();

@@ -1,7 +1,9 @@
+@using cliente.Models        <!-- ✅ Importar el modelo -->
 @using cliente.Services
 @inject ApiService ApiService
 
 <h2>Catálogo de Productos</h2>
+
 @if (productos == null)
 {
     <p><em>Cargando productos...</em></p>

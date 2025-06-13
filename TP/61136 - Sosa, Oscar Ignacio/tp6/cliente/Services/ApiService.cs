@@ -1,7 +1,6 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
 using cliente.Models;
 using System;
 using System.Collections.Generic;
@@ -16,12 +15,12 @@ namespace cliente.Services
         private readonly string _endpointDatos;
         private readonly string _endpointProductos;
 
-        public ApiService(HttpClient httpClient, ILogger<ApiService> logger, IConfiguration configuration)
+        public ApiService(HttpClient httpClient, ILogger<ApiService> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
-            _endpointDatos = configuration["ApiEndpointDatos"] ?? "api/datos";
-            _endpointProductos = configuration["ApiEndpointProductos"] ?? "api/productos";
+            _endpointDatos = "api/datos";
+            _endpointProductos = "api/productos";
         }
 
         // Método para obtener datos generales del servidor
@@ -79,3 +78,4 @@ namespace cliente.Services
             => new DatosRespuesta(mensaje, DateTime.Now);
     }
 }
+

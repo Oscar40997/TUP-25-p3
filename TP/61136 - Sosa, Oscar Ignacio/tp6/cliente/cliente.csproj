@@ -9,7 +9,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
   </ItemGroup>
 
-</Project>
+  <!-- Solo si usas código compartido -->
+  <!--
+  <ItemGroup>
+    <ProjectReference Include="..\Servidor\Servidor.csproj" />
+  </ItemGroup>
+  -->
 
+</Project>

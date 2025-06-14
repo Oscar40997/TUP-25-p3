@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable> <!-- Recomendado: habilitar nullable para mejor control de errores -->
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
   </ItemGroup>
 
-  <!-- Solo si usas código compartido -->
+  <!-- Si quieres compartir modelos entre cliente y servidor, descomenta esto y ajusta la ruta -->
   <!--
   <ItemGroup>
     <ProjectReference Include="..\Servidor\Servidor.csproj" />

@@ -3,28 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora React</title>
+    <title>Calculadora React Estilo iOS</title>
     <style>
         body {
+            background: gold;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #b80202;
-            text-align: center;
         }
-        .calculadora {
-            font-family: Arial, sans-serif;
-            background-color: #248bcf;
-            padding: 20px;
-            border-radius: 5px;
-            color: rgb(182, 22, 22);
+        .calc-container {
+            background: #cf0707;
+            border-radius: 40px;
+            width: 320px;
+            padding: 30px 15px 15px 15px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
         }
-        input {
-            margin: 5px;
+        .display {
+            color: #061a8d;
+            font-size: 60px;
+            text-align: right;
+            min-height: 70px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            overflow-x: auto;
         }
-        button {
-            margin: 5px;
+        .button-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .btn {
+            flex: 1;
+            margin: 4px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            font-size: 28px;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.2s ease; /* <--- Cambiado aquí */
+        }
+        .btn.gray { background: #a5a5a5; color: #000; }
+        .btn.orange { background: #ff9500; color: #fff; }
+        .btn.dark { background: #333; color: #fff; }
+        .btn.zero {
+            flex: 2.2;
+            border-radius: 30px;
+            text-align: left;
+            padding-left: 28px;
         }
     </style>
 </head>
@@ -39,57 +66,115 @@
     <script type="text/babel">
         const { useState } = React;
 
-        function Calculadora() {
-            const [num1, setNum1] = useState('');
-            const [num2, setNum2] = useState('');
-            const [resultado, setResultado] = useState('');
+        function CalculadoraIOS() {
+            const [display, setDisplay] = useState('0');
+            const [operador, setOperador] = useState(null);
+            const [acumulado, setAcumulado] = useState(null);
+            const [esperandoNuevo, setEsperandoNuevo] = useState(false);
 
-            const calcular = (operador) => {
-                const n1 = parseFloat(num1);
-                const n2 = parseFloat(num2);
-                if (isNaN(n1) || isNaN(n2)) {
-                    setResultado('Ingrese ambos números');
-                    return;
+            const inputNum = (num) => {
+                if (display.length > 8) return;
+                if (display === '0' || esperandoNuevo) {
+                    setDisplay(num);
+                    setEsperandoNuevo(false);
+                } else {
+                    setDisplay(display + num);
                 }
-                let res = '';
-                switch (operador) {
-                    case '+': res = n1 + n2; break;
-                    case '-': res = n1 - n2; break;
-                    case '*': res = n1 * n2; break;
-                    case '/': res = n2 !== 0 ? n1 / n2 : 'No se puede dividir por 0'; break;
-                    default: res = '';
+            };
+
+            const inputDot = () => {
+                if (esperandoNuevo) {
+                    setDisplay('0.');
+                    setEsperandoNuevo(false);
+                } else if (!display.includes('.')) {
+                    setDisplay(display + '.');
                 }
-                setResultado(res);
+            };
+
+            const clear = () => {
+                setDisplay('0');
+                setAcumulado(null);
+                setOperador(null);
+                setEsperandoNuevo(false);
+            };
+
+            const porcentaje = () => {
+                setDisplay((parseFloat(display) / 100).toString());
+                setAcumulado(null);
+                setOperador(null);
+                setEsperandoNuevo(true);
+            };
+
+            const cambiarSigno = () => {
+                setDisplay((parseFloat(display) * -1).toString());
+            };
+
+            const operar = (op) => {
+                if (operador && !esperandoNuevo) {
+                    calcular();
+                } else {
+                    setAcumulado(parseFloat(display));
+                }
+                setOperador(op);
+                setEsperandoNuevo(true);
+            };
+
+            const calcular = () => {
+                if (operador && acumulado !== null) {
+                    let res = acumulado;
+                    const actual = parseFloat(display);
+                    switch (operador) {
+                        case '+': res += actual; break;
+                        case '-': res -= actual; break;
+                        case '*': res *= actual; break;
+                        case '/': res = actual === 0 ? 'Error' : res / actual; break;
+                        default: break;
+                    }
+                    setDisplay(res.toString().slice(0,9));
+                    setAcumulado(res === 'Error' ? null : res);
+                    setOperador(null);
+                    setEsperandoNuevo(true);
+                }
             };
 
             return (
-                <div className="calculadora">
-                    <h2>Calculadora React</h2>
-                    <input
-                        type="number"
-                        value={num1}
-                        onChange={e => setNum1(e.target.value)}
-                        placeholder="Número 1"
-                    />
-                    <input
-                        type="number"
-                        value={num2}
-                        onChange={e => setNum2(e.target.value)}
-                        placeholder="Número 2"
-                    />
-                    <div>
-                        <button onClick={() => calcular('+')}>Suma</button>
-                        <button onClick={() => calcular('-')}>Resta</button>
-                        <button onClick={() => calcular('*')}>Multiplicación</button>
-                        <button onClick={() => calcular('/')}>División</button>
+                <div className="calc-container">
+                    <div className="display">{display}</div>
+                    <div className="button-row">
+                        <button className="btn gray" onClick={clear}>AC</button>
+                        <button className="btn gray" onClick={cambiarSigno}>±</button>
+                        <button className="btn gray" onClick={porcentaje}>%</button>
+                        <button className="btn orange" onClick={() => operar('/')}>÷</button>
                     </div>
-                    <h3>Resultado: {resultado}</h3>
+                    <div className="button-row">
+                        <button className="btn dark" onClick={() => inputNum('7')}>7</button>
+                        <button className="btn dark" onClick={() => inputNum('8')}>8</button>
+                        <button className="btn dark" onClick={() => inputNum('9')}>9</button>
+                        <button className="btn orange" onClick={() => operar('*')}>×</button>
+                    </div>
+                    <div className="button-row">
+                        <button className="btn dark" onClick={() => inputNum('4')}>4</button>
+                        <button className="btn dark" onClick={() => inputNum('5')}>5</button>
+                        <button className="btn dark" onClick={() => inputNum('6')}>6</button>
+                        <button className="btn orange" onClick={() => operar('-')}>−</button>
+                    </div>
+                    <div className="button-row">
+                        <button className="btn dark" onClick={() => inputNum('1')}>1</button>
+                        <button className="btn dark" onClick={() => inputNum('2')}>2</button>
+                        <button className="btn dark" onClick={() => inputNum('3')}>3</button>
+                        <button className="btn orange" onClick={() => operar('+')}>+</button>
+                    </div>
+                    <div className="button-row">
+                        <button className="btn dark zero" onClick={() => inputNum('0')}>0</button>
+                        <button className="btn dark" onClick={inputDot}>.</button>
+                        <button className="btn orange" onClick={calcular}>=</button>
+                    </div>
                 </div>
             );
         }
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<Calculadora />);
+        root.render(<CalculadoraIOS />);
     </script>
 </body>
 </html>

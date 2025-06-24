@@ -6,10 +6,33 @@
     <title>Calculadora React</title>
 
     <style>
-        /* Poner aca el CSS */
+        foundation {
+            font-family: Arial, sans-serif;
+            background-color: #b80c0c;
+            padding: 20px;
+            border-radius: 5px;
+            color: red;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #b80202;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <div>
+        <input type="number" id="num1" placeholder="Número 1">
+        <input type="number" id="num2" placeholder="Número 2">
+    </div>
+    <div>
+        <button onclick="calcular('+')">Suma</button>
+        <button onclick="calcular('-')">Resta</button>
+        <button onclick="calcular('*')">Multiplicación</button>
+        <button onclick="calcular('/')">División</button>
     <div id="root"></div>
 <!-- React y ReactDOM desde CDN -->
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
